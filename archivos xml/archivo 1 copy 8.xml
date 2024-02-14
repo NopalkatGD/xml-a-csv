@@ -1,8 +1,0 @@
-<?xml version="1.0"?>
-<empresa>
- <empleado id="122223122AAA">
- <nombre att_test_2="AAAAA321c2AAAAA">José Ernesto</nombre>
- <username>jose</username>
- <password>321423</password>
- </empleado>
-</empresa>
