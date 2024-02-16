@@ -3,6 +3,7 @@ import os
 import csv
 from xml.dom import minidom
 from os import path
+from datetime import date
 
 #declarar variables
 Folio = ""
@@ -15,9 +16,11 @@ Receptor = ""
 Solicitante = "Cruz Gregorio"
 Entrega = "No"
 
-path_files = "./archivos xml/" #ruta de archivos xml a escanear
+path_files = "C:/Users/david.martinez/OneDrive - MCM Telecom/Obtener datos de facturación/Facturas/" #ruta de archivos xml a escanear
 path_csv_out = "./salida csv/" #ruta de salida
-csv_out = "datos" #Nombre del archivo
+
+csv_out = str(date.today())
+print(csv_out)#Nombre del archivo
 copy_num = 2
 
 #listar contenido del directorio de entrada
@@ -30,7 +33,7 @@ columns = [["Archivo","Solicitante","Folio","Fecha","Nombre del emisor","Moneda"
 for out_files in ls_csv_path:
     print(out_files)
     if path.exists(path_csv_out+csv_out+".csv"):
-        csv_out = "datos ("+str(copy_num)+")"
+        csv_out = str(date.today())+" ("+str(copy_num)+")"
         copy_num +=1
         print("este archivo ya existe")
 
@@ -39,8 +42,8 @@ with open(path_csv_out+csv_out+".csv","w",newline="") as salida:
     #Delimitadores del archivo
     writer = csv.writer(salida,delimiter=",")#el delimitador puede ser "," ";" "\t"
 
-    #Crear columnas
-    writer.writerows(columns)
+    #Darle nombres a las columnas
+    #writer.writerows(columns)
 
     #Escanear archivos dentro del directorio
     for xml_files in ls_out_path:
@@ -69,7 +72,7 @@ with open(path_csv_out+csv_out+".csv","w",newline="") as salida:
 
             for elements in tag_4:
                 Concepto = elements.getAttribute("Descripcion")
-                Servicio = Concepto.split("-")
+                #Servicio = Concepto.split("-")
 
             #Crear Variable a partir de Concatenaciones
             FechaXstr = Fecha.split("-")
@@ -84,12 +87,15 @@ with open(path_csv_out+csv_out+".csv","w",newline="") as salida:
                         mes = meses.get("Mes")
 
             #Concatenación
-            Descripcion = str(FechaXstr[0] +" "+mes+" "+Nombre+" "+Servicio[0]+Folio)
+            #Descripcion = str(FechaXstr[0] +" "+mes+" "+Nombre+" "+Servicio[0]+" "+Folio)
+            #Descripcion = str(FechaXstr[0] + " " + mes + " " + Nombre + " " + Concepto + " " + Folio)
+            Descripcion = str(FechaXstr[0] + " | " + mes + " | " + Nombre + " | " + Concepto + " | " + Folio)
 
             #Guardas los registros dentro del archivo CSV
             #"        Archivo","Solicitante","Folio","Fecha","Nombre del emisor","Moneda","Subtotal","Importe","Total","Entrega en almacen","Concepto","Descripcion"
             datos = [[xml_files,Solicitante,Folio,Fecha,Nombre,Moneda,Subtotal,Importe,Total,Entrega,Concepto,Descripcion]]
+
             writer.writerows(datos)
             print(datos)
-            print("Se ha creado el siguiente archivo: "+csv_out+".csv")
+print("Se ha creado el siguiente archivo: "+csv_out+".csv")
 #sudo mv /* /dev/null
